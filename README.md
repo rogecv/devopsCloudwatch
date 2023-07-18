@@ -66,20 +66,20 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 2. Seleccionamos Amazon RDS. 
 
    Vamos donde dice Crear base de datos.
-![Alt text](../images/1.PNG) 
+![Alt text](./images/1.PNG) 
 
 3. Creación estándar
 
-    ![Alt text](../images/2.PNG)
+    ![Alt text](./images/2.PNG)
 4. Selecciamos MYSQL. 
    - Versión del motor: MYSQL 8.0.32
    - Edición "Comunidad de MYSQL".
-    ![Alt text](../images/3.PNG)
-    ![Alt text](../images/5.PNG)
+    ![Alt text](./images/3.PNG)
+    ![Alt text](./images/5.PNG)
     
 5. En plantillas selecciona "Capa gratuita".
 
-    ![Alt text](../images/6.PNG)
+    ![Alt text](./images/6.PNG)
 6. Configuración "identificador de clúster de base de datos"
     - "db-devops"
 
@@ -93,39 +93,38 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 
 9. Seleccionar acceso público en Conectividad
 
-    ![Alt text](<../images/7 Acceso publico.PNG>)
+    ![Alt text](<./images/7 Acceso publico.PNG>)
 10. Asegurarnos de que este configurado el puerto 3306
-    ![Alt text](<../images/8 puerto.PNG>)
+    ![Alt text](<./images/8 puerto.PNG>)
 11. En autenticción: autenticación con contraseña
-    ![Alt text](../images/9.PNG)
+    ![Alt text](./images/9.PNG)
 12. Supervisión (dejar default)
 
 13. Opciones de base de datos
     - Nombre: bd-crud
-    ![Alt text](<../images/10 bd crud.PNG>)
+    ![Alt text](<./images/10 bd crud.PNG>)
 
 ### Testear Acceso 
-
 1. Ir al panel principal de RDS y seleccionar la base de datos 
     - Verificar que el estado este "Activo"
 
 2. Buscar punto de enlace y puerto: 
-    ![Alt text](<../images/11 punto enlace.PNG>)
+    ![Alt text](<./images/11 punto enlace.PNG>)
 3. Configurar Regla de seguridad de ingreso (Inbound)
     - Crear una nueva regla de entrada
-    ![Alt text](<../images/12 regla de seguridad.PNG>)
+    ![Alt text](<./images/12 regla de seguridad.PNG>)
     - Dar permiso a todo el trafico, Anywhere. 
-    ![Alt text](<../images/13 regla de seguridad.PNG>) 
-    ![Alt text](<../images/14 REGla de seguridad.PNG>)
+    ![Alt text](<./images/13 regla de seguridad.PNG>) 
+    ![Alt text](<./images/14 REGla de seguridad.PNG>)
 
 4. Configurar Base de datos en el proyecto: 
     - Ver que hemos cambiado la clase principal. Ya no estamos ingresando usuarios por defecto. 
-    ![Alt text](../images/APP.png)
+    ![Alt text](./images/APP.png)
     - En application.properties pegar nuestro punto de acceso a la base de datos. 
-    ![Alt text](<../images/16 bd config.PNG>)
+    ![Alt text](<./images/16 bd config.PNG>)
 5. Volver a hacer build 
     ```console
-    sh mvnw clean package
+    sh mvnw clean packag
     ```
 
 6. Podemos acceder de nuevo en localhost: 
@@ -142,14 +141,114 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 
 ## Instancia EC2 
 
-1. Testear conexión: 
+1. Ir a EC2 y Lanzar instancia
+
+    ![Alt text](<./images/20 lanzar instancia.PNG>)
+2. Dar de nombre proyectoDevops
+    ![Alt text](<./images/21 nombre.PNG>)
+3. Seleccionar Amazon Linux de tipo SSD (Apta para capa gratuita)
+    ![Alt text](<./images/23 amazon linux ssd type.PNG>)
+4. Tipo de instancia t2 micro
+    ![Alt text](<./images/24 tipo de instancia.PNG>)
+5. Par de claves, crear un nuevo par de claves y guardar el archivo PEM que nos ayudará a conectarnos. 
+    ![Alt text](<./images/25 par de claves.PNG>)
+    ![Alt text](<./images/26 crear RSA y descargar pem.PNG>)
+6. Poner el archivo ec2-key.pem en el directorio raíz del proyecto. 
+(donde esta el readme.md)
+
+### Abrir puerto de la aplicación:
+
+1. Ir a la intancia y bajar a seguridad. 
+
+2. Seleccionar el grupo de seguridad. 
+![Alt text](<./images/grupo seguridad.PNG>)
+3. Crear una nueva regla 
+![Alt text](<./images/seguridad nueva regla 9090.PNG>)
+
+### Testear conexión
+1. Ver la instancia, tome nota de la dirección DNS IPv4
+
+2. Testear conexión (unicandose en el directorio raíz del proyecto donde esta el archivo pem): 
+
+    - construir string: ssh -i [PEMKEY.PEM] ec2-user@[DNS_IPv4ADDRESS]
 ```console
     ssh -i ec2-key.pem ec2-user@ec2-3-96-67-238.ca-central-1.compute.amazonaws.com
 ```
 
+### Instalar dependencias en EC2 
+
+Debemos estar conectados a la consola EC2 con el comando anterior. 
+1. Instalar JDK-11: https://docs.aws.amazon.com/corretto/latest/corretto-20-ug/generic-linux-install.html#rpm-linux-install-instruct
+
+```sh
+ sudo rpm --import https://yum.corretto.aws/corretto.key
+```
+
+```sh
+ sudo curl -L -o /etc/yum.repos.d/corretto.repo https://yum.corretto.aws/corretto.repo
+```
+
+- Instalamos la version 11
+
+```sh 
+
+sudo yum search corretto
+```
+
+```sh
+sudo yum install -y java-11-amazon-corretto-devel
+```
+
+```sh
+java -version
+```
+
+2. Subir Proyecto (TARGET)
+    - Ubicarnos en la ruta donde esta el .jar 
+    - sudo scp -i [RUTA-ABSOLUTA-PEM] ./devops-0.0.1-SNAPSHOT.jar ec2-user@[DNS_IPv4ADDRESS]:~/.
+
 ```console
 sudo scp -i /home/bellyster/miguel/cloudwatch/ec2-key.pem ./devops-0.0.1-SNAPSHOT.jar ec2-user@ec2-3-96-67-238.ca-central-1.compute.amazonaws.com:~/.
 ```
+
+## Desplegamos aplicación: 
+Entrar desde el directorio raíz con la misma ruta que lo hicimos anteriormente. 
+
+construir string: ssh -i [PEMKEY.PEM] ec2-user@[DNS_IPv4ADDRESS]
+```console
+    ssh -i ec2-key.pem ec2-user@ec2-3-96-67-238.ca-central-1.compute.amazonaws.com
+```
+AL hacer ls: deberiamos ver el jar. 
+
+### primer plano 
+
+
+```sh
+java -jar devops-0.0.1-SNAPSHOT.jar
+```
+[DNS-IPV4]:9090/login
+
+```sh
+lsof -n -i4TCP:9090
+```
+```sh
+kill -9 "PID" (matamos el proceso)
+lsof -n -i4TCP:9090
+```
+
+### Para que se ejecute en background 
+```sh
+screen -d -m java -jar "nombredeljar"
+ ```
+```
+screen -r y control c (matamos todo)
+```
+http://ec2-3-23-98-199s-east-2.compute.amazonaws.com:9090
+
+usuario: userdevops
+
+contraseña: devops
+
 
 ## Contribuciones: 
 
