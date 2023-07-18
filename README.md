@@ -121,7 +121,7 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
     - Ver que hemos cambiado la clase principal. Ya no estamos ingresando usuarios por defecto. 
     ![Alt text](./images/APP.png)
     - En application.properties pegar nuestro punto de acceso a la base de datos. 
-    ![Alt text](<./images/16 bd config.PNG>)
+    
 5. Volver a hacer build 
     ```console
     sh mvnw clean packag
@@ -144,15 +144,25 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 1. Ir a EC2 y Lanzar instancia
 
     ![Alt text](<./images/20 lanzar instancia.PNG>)
+
 2. Dar de nombre proyectoDevops
+
     ![Alt text](<./images/21 nombre.PNG>)
+
 3. Seleccionar Amazon Linux de tipo SSD (Apta para capa gratuita)
+
     ![Alt text](<./images/23 amazon linux ssd type.PNG>)
+
 4. Tipo de instancia t2 micro
+
     ![Alt text](<./images/24 tipo de instancia.PNG>)
+
 5. Par de claves, crear un nuevo par de claves y guardar el archivo PEM que nos ayudará a conectarnos. 
+
     ![Alt text](<./images/25 par de claves.PNG>)
+
     ![Alt text](<./images/26 crear RSA y descargar pem.PNG>)
+    
 6. Poner el archivo ec2-key.pem en el directorio raíz del proyecto. 
 (donde esta el readme.md)
 
