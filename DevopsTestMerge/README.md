@@ -37,7 +37,7 @@ git clone
 Entra al directorio del proyecto:
 
 ```console
-cd devopsCloudwatch
+cd DevopsTestMerge
 ```
 
 Para compilar el proyecto y testear utilizando el mvn wrapper
@@ -64,18 +64,23 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 1. Ir a la consola de Amazon y buscar RDS: 
 
 2. Seleccionamos Amazon RDS. 
+
    Vamos donde dice Crear base de datos.
+![Alt text](../images/1.PNG) 
 
 3. Creación estándar
 
+    ![Alt text](../images/2.PNG)
 4. Selecciamos MYSQL. 
    - Versión del motor: MYSQL 8.0.32
    - Edición "Comunidad de MYSQL".
-
+    ![Alt text](../images/3.PNG)
+    ![Alt text](../images/5.PNG)
+    
 5. En plantillas selecciona "Capa gratuita".
 
+    ![Alt text](../images/6.PNG)
 6. Configuración "identificador de clúster de base de datos"
-
     - "db-devops"
 
 7. Configuración de credenciales
@@ -88,28 +93,36 @@ Amazon Relational Database Service (Amazon RDS) es un servicio de bases de datos
 
 9. Seleccionar acceso público en Conectividad
 
+    ![Alt text](<../images/7 Acceso publico.PNG>)
 10. Asegurarnos de que este configurado el puerto 3306
-
+    ![Alt text](<../images/8 puerto.PNG>)
 11. En autenticción: autenticación con contraseña
-
+    ![Alt text](../images/9.PNG)
 12. Supervisión (dejar default)
 
 13. Opciones de base de datos
     - Nombre: bd-crud
+    ![Alt text](<../images/10 bd crud.PNG>)
 
 ### Testear Acceso 
 
 1. Ir al panel principal de RDS y seleccionar la base de datos 
     - Verificar que el estado este "Activo"
-2. Buscar punto de enlace y puerto: 
 
+2. Buscar punto de enlace y puerto: 
+    ![Alt text](<../images/11 punto enlace.PNG>)
 3. Configurar Regla de seguridad de ingreso (Inbound)
     - Crear una nueva regla de entrada
+    ![Alt text](<../images/12 regla de seguridad.PNG>)
     - Dar permiso a todo el trafico, Anywhere. 
+    ![Alt text](<../images/13 regla de seguridad.PNG>) 
+    ![Alt text](<../images/14 REGla de seguridad.PNG>)
+
 4. Configurar Base de datos en el proyecto: 
     - Ver que hemos cambiado la clase principal. Ya no estamos ingresando usuarios por defecto. 
+    ![Alt text](../images/APP.png)
     - En application.properties pegar nuestro punto de acceso a la base de datos. 
-
+    ![Alt text](<../images/16 bd config.PNG>)
 5. Volver a hacer build 
     ```console
     sh mvnw clean package
