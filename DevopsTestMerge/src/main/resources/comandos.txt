@@ -1,0 +1,8 @@
+sudo scp -i /Users/rcisternasv/Documents/CursoTALENTODIGITALDevOps/Modulo6/Clase4/devopsCloudwatch/ec2-key.pem ./devops-0.0.1-SNAPSHOT.jar ec2-user@ec2-3-86-45-157.compute-1.amazonaws.com:~/.
+
+
+http://ec2-3-86-45-157.compute-1.amazonaws.com:9090/
+
+
+
+/Users/rcisternasv/Documents/CursoTALENTODIGITALDevOps/Modulo6/Clase4/devopsCloudwatch/ec2-key.pem
